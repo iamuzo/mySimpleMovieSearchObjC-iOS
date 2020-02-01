@@ -10,7 +10,10 @@
 
 @implementation Movie
 
-- (instancetype)initWithTitle:(NSString *)title rating:(NSInteger)rating overview:(NSString *)overview posterpath:(NSString *)posterpath
+- (instancetype)initWithTitle:(NSString *)title
+                       rating:(NSInteger)rating
+                     overview:(NSString *)overview
+                   posterpath:(NSString *)posterpath
 {
     self = [super init];
     
@@ -35,6 +38,8 @@
     NSInteger rating = [dictionary[@"vote_average"] intValue];
     NSString *overview = dictionary[@"overview"];
     NSString *posterpath = dictionary[@"poster_path"];
+    
+    NSLog(@"this is posterpath: %@", posterpath );
     
     return [self initWithTitle:title rating:rating overview:overview posterpath:posterpath];
 }

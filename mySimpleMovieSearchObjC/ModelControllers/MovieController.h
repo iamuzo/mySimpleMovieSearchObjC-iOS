@@ -15,7 +15,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 +(NSString *)retrieveAPIKey;
 
-+(void)searchForMovieUsingSearchTerm:(NSString *)searchTerm completion:(void (^) (NSArray<Movie *> *movies, NSError * _Nullable error))completion;
++(void)searchForMovieUsingSearchTerm:(NSString *)searchTerm completion:(void (^) (NSArray<Movie *> *))completion;
 
 +(void)getImageFor:(Movie *)movie completion:(void (^)(UIImage * _Nullable))completion;
 

@@ -17,7 +17,7 @@ static NSString *const moviePathString = @"/3/search/movie";
 
 static NSString *const fetchImageBaseString = @"https://image.tmdb.org";
 static NSString *const tPathComponent = @"t";
-static NSString *const pPathComponent = @"t";
+static NSString *const pPathComponent = @"p";
 static NSString *const sizePathComponent = @"w200";
 
 + (NSString *)retrieveAPIKey
@@ -30,7 +30,8 @@ static NSString *const sizePathComponent = @"w200";
     return apiKey;
 }
 
-+ (void)searchForMovieUsingSearchTerm:(NSString *)searchTerm completion:(void (^)(NSArray<Movie *> *, NSError *))completion
++ (void)searchForMovieUsingSearchTerm:(NSString *)searchTerm
+                           completion:(void (^)(NSArray<Movie *> * _Nonnull))completion
 {
     NSURL *url = [NSURL URLWithString:baseString];
     NSURL *moviePathURL = [url URLByAppendingPathComponent:moviePathString];
@@ -50,17 +51,20 @@ static NSString *const sizePathComponent = @"w200";
     NSURL *finalURL = [urlComponents URL];
     NSLog(@"this is the url for searching for a movie: %@", finalURL);
     
-    [[[NSURLSession sharedSession] dataTaskWithURL:finalURL completionHandler:^(NSData * data, NSURLResponse * response, NSError * error) {
+    [[[NSURLSession sharedSession]
+      dataTaskWithURL:finalURL
+      completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         if (error) {
             NSLog(@"Error fetching movies from the server: %@", error);
-            completion(nil, error);
+            //completion(nil);
+            completion([NSArray new]);
             return;
         }
         
         if (!data) {
             NSLog(@"Error fetching any movie using the supplied search term: %@", error);
-            completion(nil, error);
+            completion([NSArray new]);
             return;
         }
         
@@ -69,7 +73,7 @@ static NSString *const sizePathComponent = @"w200";
         
         if (!topLevelDictionary || ![topLevelDictionary isKindOfClass:[NSDictionary class]]) {
             NSLog(@"Error with topLevelDictionary: %@", error);
-            completion(nil, error);
+            completion([NSArray new]);
             return;
         }
         
@@ -86,9 +90,7 @@ static NSString *const sizePathComponent = @"w200";
             [arrayOfMovies addObject:movie];
         }
         //complete with the arrayOfMovies
-        completion(arrayOfMovies, nil);
-        //completion(arrayOfMovies);
-        
+        completion(arrayOfMovies);
     }] resume];
 }
 
@@ -102,7 +104,9 @@ static NSString *const sizePathComponent = @"w200";
     NSLog(@"this is the url for searching for a movie: %@", posterPathURL);
 
     
-    [[[NSURLSession sharedSession] dataTaskWithURL:posterPathURL completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+    [[[NSURLSession sharedSession]
+      dataTaskWithURL:posterPathURL
+      completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         
         //handle error
         if (error) {
@@ -113,7 +117,10 @@ static NSString *const sizePathComponent = @"w200";
         
         if (data) {
             UIImage *image = [UIImage imageWithData:data];
-            completion(image);
+            return completion(image);
+        } else {
+            UIImage *image = [UIImage systemImageNamed:@"rays"];
+            return completion(image);
         }
         
     }] resume];
