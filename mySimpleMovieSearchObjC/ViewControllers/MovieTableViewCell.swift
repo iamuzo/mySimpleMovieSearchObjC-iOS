@@ -11,24 +11,24 @@ import UIKit
 class MovieTableViewCell: UITableViewCell {
     
     // MARK: - Outlets
+    @IBOutlet weak var moviePosterImageView: UIImageView!
     @IBOutlet weak var movieTitleLabel: UILabel!
     @IBOutlet weak var movieRatingLabel: UILabel!
-    @IBOutlet weak var movieOverViewLabel: UILabel!
-    @IBOutlet weak var moviePosterImageView: UIImageView!
+    @IBOutlet weak var movieOverviewLabel: UILabel!
     
     func updateCell(withMovie movie: Movie?) {
 
         guard let existingMovie = movie else { return }
-        movieTitleLabel.text = existingMovie.title
-        movieRatingLabel.text = "Rating: \(existingMovie.rating)"
-        movieOverViewLabel.text = "\(existingMovie.overview)"
 
         MovieController.getImageFor(existingMovie) { (image) in
+            guard let returnedImage = image else {return}
+            
             DispatchQueue.main.async {
-                DispatchQueue.main.async {
-                    self.moviePosterImageView.image = image
-                }
+                self.moviePosterImageView.image = returnedImage
             }
         }
+        movieTitleLabel.text = existingMovie.title
+        movieRatingLabel.text = "Rating: \(existingMovie.rating)"
+        movieOverviewLabel.text = "\(existingMovie.overview)"
     }
 }

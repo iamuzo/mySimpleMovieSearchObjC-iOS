@@ -38,9 +38,9 @@ class MovieSearchTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "movieCell", for: indexPath) as? MovieTableViewCell else { return UITableViewCell() }
-        
-        let movie = movies[indexPath.row]
-        cell.updateCell(withMovie: movie)
+    
+        let returnedMovie = movies[indexPath.row]
+        cell.updateCell(withMovie: returnedMovie)
         return cell
     }
 
@@ -62,16 +62,8 @@ extension MovieSearchTableViewController: UISearchBarDelegate {
         guard let searchTerm = searchBar.text, !searchTerm.isEmpty else { return }
         print(searchTerm)
         
-        
-        
-        MovieController.searchForMovie(usingSearchTerm: searchTerm) { (returnedArrayOfMovies, error) in
-            if (error != nil) {
-                guard let error = error else { return }
-                print("ther was an error retrieving movies: ", error.localizedDescription)
-            } else {
-                print(returnedArrayOfMovies)
-                self.movies = returnedArrayOfMovies
-            }
+        MovieController.searchForMovie(usingSearchTerm: searchTerm) { (returnedArrayOfMovies) in
+            self.movies = returnedArrayOfMovies
         }
         
         //clear the search field
